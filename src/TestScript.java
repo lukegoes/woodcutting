@@ -11,12 +11,16 @@ import org.dreambot.api.methods.container.impl.Inventory;
 import org.dreambot.api.methods.interactive.Players;
 import org.dreambot.api.utilities.Sleep;
 import org.dreambot.api.wrappers.interactive.GameObject;
+import org.dreambot.api.wrappers.items.Item;
+import org.dreambot.api.input.Keyboard;
+import org.dreambot.api.input.Mouse;
 
 @ScriptManifest(name = "Woodcutting", description = "Terceira Tentativa", author = "Luk",
-        version = 1.5, category = Category.WOODCUTTING, image = "")
+        version = 1.55, category = Category.WOODCUTTING, image = "")
 public class TestScript extends AbstractScript {
 
     State state;
+    boolean isPowerMining = true;
     Area bankArea = new Area(3179, 3448, 3191, 3432);
     Area normalTreeArea = new Area(3149, 3465, 3171, 3449);
 
@@ -36,7 +40,7 @@ public class TestScript extends AbstractScript {
                     Walking.walk(bankArea.getRandomTile());
                 }
                 break;
-            case USEBANK:
+            case USE_BANK:
                 Logger.log("Ação: Tentando abrir o banco.");
                 if (!Bank.isOpen()) {
                     GameObject bankBooth = GameObjects.closest("Bank booth");
@@ -83,6 +87,10 @@ public class TestScript extends AbstractScript {
                     Logger.log("Nenhuma árvore encontrada.");
                 }
                 break;
+            case DROPPING_LOGS:
+                Logger.log("Ação: Dropando os logs rapidamente (Shift-Drop).");
+                dropItemsByName("Logs");
+                break;
             case CHOPPING_TREE:
                 Logger.log("Ação: Cortando árvore.");
                 //put some random actions here for antibot
@@ -92,13 +100,17 @@ public class TestScript extends AbstractScript {
     }
 
     private State getState() {
+        if (isPowerMining && Inventory.isFull()) {
+            Logger.log("Condição: Inventário cheio e modo Power Mining ativo.");
+            return State.DROPPING_LOGS;
+        }
         if (Inventory.isFull() && !bankArea.contains(Players.getLocal().getTile())) {
             Logger.log("Condição: Inventário cheio e longe do banco.");
             return State.WALKING_TO_BANK;
         }
         else if (Inventory.isFull() && bankArea.contains(Players.getLocal().getTile()) && !Bank.isOpen()) {
             Logger.log("Condição: Inventário cheio e no banco.");
-            return State.USEBANK;
+            return State.USE_BANK;
         }
         else if (Bank.isOpen() && Inventory.isFull()) {
             Logger.log("Condição: Banco aberto e inventário cheio.");
@@ -116,6 +128,22 @@ public class TestScript extends AbstractScript {
             return State.CHOPPING_TREE;
         }
         return state;
+    }
+
+    public void dropItemsByName(String itemName) {
+        Logger.log("Dropando itens com nome: " + itemName);
+
+        Keyboard.pressShift();
+
+        for (int i = 0; i < 28; i++) {
+            Item item = Inventory.getItemInSlot(i);
+            if (item != null && item.getName().equalsIgnoreCase(itemName)) {
+                Mouse.click(Inventory.slotBounds(i));
+                Sleep.sleep(50, 100);
+            }
+        }
+
+        Keyboard.releaseShift();
     }
 
 }
