@@ -21,10 +21,13 @@ import java.util.List;
 import static org.dreambot.api.methods.input.Camera.mouseRotateToYaw;
 import java.util.HashMap;
 import java.util.Map;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics;
 
 
 @ScriptManifest(name = "Woodcutting", description = "Terceira Tentativa", author = "Luk",
-        version = 1.755, category = Category.WOODCUTTING, image = "")
+        version = 1.9, category = Category.WOODCUTTING, image = "")
 public class TestScript extends AbstractScript {
 
     State state;
@@ -32,14 +35,20 @@ public class TestScript extends AbstractScript {
     Area bankArea;
     String treeName = "Tree";
     private String logName;
+    private String modeName;
     private State lastLoggedState = null;
     private Map<String, String> lastLogs = new HashMap<>();
+    private long startTime;
+    private int logsCortados = 0;
+    private int lastInventoryCount = 0;
+    private String ultimaAcao = "Iniciando...";
 
 
     boolean isPowerMining = true;
 
     @Override
     public void onStart() {
+        startTime = System.currentTimeMillis();
         logCategory("start","Script iniciado: Woodcutting by Luk");
 
         final JFrame frame = new JFrame("Make your choices!");
@@ -52,16 +61,17 @@ public class TestScript extends AbstractScript {
 
         // Árvore
         JLabel treeLabel = new JLabel("Qual árvore deseja cortar?");
-        JRadioButton normalTreeButton = new JRadioButton("🌳 Normal Tree (nível 1–15)");
-        JRadioButton oakTreeButton = new JRadioButton("🌳 Oak Tree (nível 15–30)");
+        JRadioButton normalTreeButton = new JRadioButton("Normal Tree");
+        JRadioButton oakTreeButton = new JRadioButton("Oak Tree");
+        JRadioButton willowTreeButton = new JRadioButton("Willow Tree");
         ButtonGroup treeGroup = new ButtonGroup();
         treeGroup.add(normalTreeButton);
         treeGroup.add(oakTreeButton);
 
         // Modo
         JLabel methodLabel = new JLabel("Modo de corte:");
-        JRadioButton powerButton = new JRadioButton("⚡ Power Cutting (drop logs)");
-        JRadioButton bankingButton = new JRadioButton("🏦 Banking (guardar logs no banco)");
+        JRadioButton powerButton = new JRadioButton("Power Cutting");
+        JRadioButton bankingButton = new JRadioButton("Banking");
         ButtonGroup methodGroup = new ButtonGroup();
         methodGroup.add(powerButton);
         methodGroup.add(bankingButton);
@@ -72,6 +82,7 @@ public class TestScript extends AbstractScript {
         panel.add(treeLabel);
         panel.add(normalTreeButton);
         panel.add(oakTreeButton);
+        panel.add(willowTreeButton);
         panel.add(Box.createVerticalStrut(10));
         panel.add(methodLabel);
         panel.add(powerButton);
@@ -96,13 +107,22 @@ public class TestScript extends AbstractScript {
                 treeArea = new Area(3098, 3248, 3103, 3238);
                 bankArea = new Area(3090, 3245, 3096, 3240);
                 logName = "Oak logs";
+            } else if (willowTreeButton.isSelected()) {
+                logCategory("árvore","Selecionado: Willow Tree");
+                treeName = "Willow Tree";
+                treeArea = new Area(3081, 3240, 3093, 3225);
+                bankArea = new Area(3090, 3245, 3096, 3240);
+
+                logName = "Willow logs";
             }
 
             if (powerButton.isSelected()) {
                 isPowerMining = true;
+                modeName = "Power Training";
                 logCategory("modo","Modo selecionado: Power Cutting");
             } else if (bankingButton.isSelected()) {
                 isPowerMining = false;
+                modeName = "Banking";
                 logCategory("modo","Modo selecionado: Banking");
             }
 
@@ -116,6 +136,11 @@ public class TestScript extends AbstractScript {
 
     @Override
     public int onLoop() {
+        int currentCount = Inventory.count(logName);
+        if (currentCount > lastInventoryCount) {
+            logsCortados += (currentCount - lastInventoryCount);
+        }
+        lastInventoryCount = currentCount;
         State currentState = getState();
         if (currentState != lastLoggedState) {
             logCategory("estado", "Mudança de estado: " + currentState);
@@ -299,7 +324,33 @@ public class TestScript extends AbstractScript {
         if (!message.equals(last)) {
             Logger.log(message);
             lastLogs.put(category, message);
+            if (category.equals("ação")) {
+                ultimaAcao = message;
+            }
         }
+    }
+
+    @Override
+    public void onPaint(Graphics g) {
+        // Configurações visuais
+        g.setColor(new Color(0, 0, 0, 160)); // fundo semitransparente
+        g.fillRoundRect(10, 20, 250, 100, 10, 10);
+
+        g.setColor(Color.WHITE);
+        g.setFont(new Font("Poppins", Font.PLAIN, 12));
+
+        // Info
+        g.drawString("Tempo rodando: " + formatTime(System.currentTimeMillis() - startTime), 20, 50);
+        g.drawString("Modo: " + logName + " + " + modeName, 20, 70);
+        g.drawString("Última ação: " + ultimaAcao, 20, 90);
+        g.drawString("Logs cortados: " + logsCortados, 20, 110);
+    }
+
+    private String formatTime(long time) {
+        long seconds = time / 1000 % 60;
+        long minutes = time / (1000 * 60) % 60;
+        long hours = time / (1000 * 60 * 60);
+        return String.format("%02d:%02d:%02d", hours, minutes, seconds);
     }
 
 
