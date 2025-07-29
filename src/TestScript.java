@@ -16,9 +16,15 @@ import org.dreambot.api.input.Keyboard;
 import org.dreambot.api.input.Mouse;
 
 import javax.swing.*;
+import java.awt.Point;
+import java.util.List;
+import static org.dreambot.api.methods.input.Camera.mouseRotateToYaw;
+import java.util.HashMap;
+import java.util.Map;
+
 
 @ScriptManifest(name = "Woodcutting", description = "Terceira Tentativa", author = "Luk",
-        version = 1.65, category = Category.WOODCUTTING, image = "")
+        version = 1.755, category = Category.WOODCUTTING, image = "")
 public class TestScript extends AbstractScript {
 
     State state;
@@ -26,11 +32,15 @@ public class TestScript extends AbstractScript {
     Area bankArea;
     String treeName = "Tree";
     private String logName;
+    private State lastLoggedState = null;
+    private Map<String, String> lastLogs = new HashMap<>();
+
+
     boolean isPowerMining = true;
 
     @Override
     public void onStart() {
-        Logger.log("Script iniciado: Woodcutting by Luk");
+        logCategory("start","Script iniciado: Woodcutting by Luk");
 
         final JFrame frame = new JFrame("Make your choices!");
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -75,13 +85,13 @@ public class TestScript extends AbstractScript {
         // Ação do botão iniciar
         startButton.addActionListener(e -> {
             if (normalTreeButton.isSelected()) {
-                Logger.log("Selecionado: Normal Tree");
+                logCategory("árvore","Selecionado: Normal Tree");
                 treeName = "Tree";
                 treeArea = new Area(3149, 3465, 3171, 3449);
                 bankArea = new Area(3179, 3448, 3191, 3432);
                 logName = "Logs";
             } else if (oakTreeButton.isSelected()) {
-                Logger.log("Selecionado: Oak Tree");
+                logCategory("árvore","Selecionado: Oak Tree");
                 treeName = "Oak Tree";
                 treeArea = new Area(3098, 3248, 3103, 3238);
                 bankArea = new Area(3090, 3245, 3096, 3240);
@@ -90,10 +100,10 @@ public class TestScript extends AbstractScript {
 
             if (powerButton.isSelected()) {
                 isPowerMining = true;
-                Logger.log("Modo selecionado: Power Cutting");
+                logCategory("modo","Modo selecionado: Power Cutting");
             } else if (bankingButton.isSelected()) {
                 isPowerMining = false;
-                Logger.log("Modo selecionado: Banking");
+                logCategory("modo","Modo selecionado: Banking");
             }
 
             frame.dispose();
@@ -107,102 +117,111 @@ public class TestScript extends AbstractScript {
     @Override
     public int onLoop() {
         State currentState = getState();
-        Logger.log("Estado atual: " + currentState);
-        switch (getState()) {
+        if (currentState != lastLoggedState) {
+            logCategory("estado", "Mudança de estado: " + currentState);
+            lastLoggedState = currentState;
+            lastLogs.clear();
+        }
+        switch (currentState) {
             case WALKING_TO_BANK:
-                Logger.log("Ação: Andando até o banco.");
+                logCategory("ação", "Andando até o banco.");
                 if (!Players.getLocal().isMoving()) {
-                    Logger.log("Jogador parado, iniciando caminhada até o banco.");
+                    logCategory("estado","Jogador parado, iniciando caminhada até o banco.");
                     Walking.walk(bankArea.getRandomTile());
                 }
                 break;
             case USE_BANK:
-                Logger.log("Ação: Tentando abrir o banco.");
+                logCategory("ação","Tentando abrir o banco.");
                 if (!Bank.isOpen()) {
                     GameObject bankBooth = GameObjects.closest("Bank booth");
                     if (bankBooth != null) {
-                        Logger.log("Interagindo com o banco...");
+                        logCategory("ação","Interagindo com o banco...");
                         bankBooth.interact("Bank");
                         Sleep.sleepUntil(() -> Bank.isOpen(), 4000);
                     } else {
-                        Logger.log("Bank booth não encontrado.");
+                        logCategory("estado","Bank booth não encontrado.");
                     }
                 }
                 else {
-                    Logger.log("Banco já aberto, preparando para depositar.");
+                    logCategory("estado","Banco já aberto, preparando para depositar.");
                 }
                 break;
             case BANKING:
-                Logger.log("Ação: Depositando " + logName);
+                logCategory("ação","Depositando " + logName);
                 Bank.depositAll(logName);
                 Sleep.sleepUntil(() -> !Inventory.contains(logName), 2000);
                 if (!Inventory.contains(logName)) {
-                    Logger.log("Depósito concluído, fechando o banco.");
+                    logCategory("estado","Depósito concluído, fechando o banco.");
                     Bank.close();
                 }else {
-                    Logger.log(logName + " ainda está no inventário.");
+                    logCategory("estado",logName + " ainda está no inventário.");
                 }
                 break;
             case WALKING_TO_TREES:
-                Logger.log("Ação: Andando até as árvores.");
+                logCategory("ação","Andando até as árvores.");
                 if (!Players.getLocal().isMoving()) {
-                    Logger.log("Jogador parado, iniciando caminhada até a área de árvores.");
+                    logCategory("estado","Jogador parado, iniciando caminhada até a área de árvores.");
                     Walking.walk(treeArea.getRandomTile());
                 }
                 break;
             case FINDING_TREE:
-                Logger.log("Ação: Procurando uma árvore para cortar.");
+                logCategory("ação","Procurando uma árvore para cortar.");
                 if (!Players.getLocal().isAnimating() && !Players.getLocal().isMoving()) {
                     GameObject tree = GameObjects.closest(t ->
                             t.getName().equalsIgnoreCase(treeName) && treeArea.contains(t.getTile())
                     );
-                    Logger.log("Árvore encontrada, tentando cortar.");
+                    logCategory("estado","Árvore encontrada, tentando cortar.");
                     if (tree != null && tree.interact("Chop down")) {
-                        Logger.log("Interagindo com a árvore...");
+                        logCategory("ação","Interagindo com a árvore...");
                         Sleep.sleepUntil(() -> Players.getLocal().isAnimating(), 4000);
                     }
+                    if (Calculations.random(1, 100) <= 10) {
+                        performAntiban();
+                    }
                 } else {
-                    Logger.log("Nenhuma árvore encontrada.");
+                    logCategory("estado","Nenhuma árvore encontrada.");
                 }
                 break;
             case DROPPING_LOGS:
-                Logger.log("Ação: Dropando " +logName);
+                logCategory("ação","Dropando " +logName);
                 dropItemsByName(logName);
                 break;
             case CHOPPING_TREE:
-                Logger.log("Ação: Cortando árvore.");
-                //put some random actions here for antibot
+                logCategory("ação","Cortando árvore.");
+                if (Calculations.random(1, 100) <= 15) {
+                    performAntiban(); 
+                }
                 break;
         }
-        return Calculations.random(300, 700);
+        return randomDelay(300, 700, Calculations.random(100, 200));
     }
 
     private State getState() {
         if (isPowerMining && Inventory.isFull()) {
-            Logger.log("Condição: Inventário cheio e modo Power Mining ativo.");
+            logCategory("condição","Inventário cheio e modo Power Mining ativo.");
             return State.DROPPING_LOGS;
         }
         if (Inventory.isFull() && !bankArea.contains(Players.getLocal().getTile())) {
-            Logger.log("Condição: Inventário cheio e longe do banco.");
+            logCategory("condição","Inventário cheio e longe do banco.");
             return State.WALKING_TO_BANK;
         }
         else if (Inventory.isFull() && bankArea.contains(Players.getLocal().getTile()) && !Bank.isOpen()) {
-            Logger.log("Condição: Inventário cheio e no banco.");
+            logCategory("condição", "Inventário cheio e no banco.");
             return State.USE_BANK;
         }
         else if (Bank.isOpen() && Inventory.isFull()) {
-            Logger.log("Condição: Banco aberto e inventário cheio.");
+            logCategory("condição","Banco aberto e inventário cheio.");
             return State.BANKING;
         }
         else if (!Inventory.isFull() && !treeArea.contains(Players.getLocal().getTile())) {
-            Logger.log("Condição: Inventário não está cheio e jogador está longe das árvores.");
+            logCategory("condição","Inventário não está cheio e jogador está longe das árvores.");
             return State.WALKING_TO_TREES;
         }
         else if (!Inventory.isFull() && !Players.getLocal().isAnimating() && treeArea.contains(Players.getLocal().getTile())) {
-            Logger.log("Condição: Pronto para procurar árvore.");
+            logCategory("condição","Pronto para procurar árvore.");
             return State.FINDING_TREE;
         } else if (!Inventory.isFull() && Players.getLocal().isAnimating() && treeArea.contains(Players.getLocal().getTile())) {
-            Logger.log("Condição: Atualmente cortando árvore.");
+            logCategory("condição","Atualmente cortando árvore.");
             return State.CHOPPING_TREE;
         }
         return state;
@@ -210,11 +229,11 @@ public class TestScript extends AbstractScript {
 
     public void dropItemsByName(String itemName) {
         if (itemName == null) {
-            Logger.log("Nome do item não definido. Cancelando drop.");
+            logCategory("estado","Nome do item não definido. Cancelando drop.");
             return;
         }
 
-        Logger.log("Dropando itens com nome: " + itemName);
+        logCategory("ação","Dropando itens com nome: " + itemName);
 
         Keyboard.pressShift();
 
@@ -228,6 +247,62 @@ public class TestScript extends AbstractScript {
 
         Keyboard.releaseShift();
     }
+
+    public int randomDelay(int min, int max, double dev) {
+        double mean = (min + max) / 2.0;
+        double gaussian = Calculations.nextGaussianRandom(mean, dev);
+        return (int) Math.max(min, Math.min(max, gaussian));
+    }
+
+    private void performAntiban() {
+        int chance = Calculations.random(1, 100);
+
+        if (chance <= 10) {
+            logCategory("antiban","Movimentando o mouse aleatoriamente.");
+            Mouse.moveOutsideScreen();
+            Sleep.sleep(Calculations.random(1000, 3000));
+        } else if (chance <= 20) {
+            logCategory("antiban","Movendo mouse para área da aba de skills.");
+            int x = (int) Calculations.nextGaussianRandom(550, 20);
+            int y = (int) Calculations.nextGaussianRandom(190, 20);
+            Mouse.move(new Point(x, y));
+            Sleep.sleep(Calculations.random(800, 1600));
+        } else if (chance <= 25) {
+            logCategory("antiban","Inspecionando objeto aleatório.");
+
+            // Pega todos os objetos carregados no mapa
+            List<GameObject> objetos = GameObjects.all();
+
+            // Filtra para garantir que tenha objetos visíveis e interagíveis
+            objetos = objetos.stream()
+                    .filter(obj -> obj != null && obj.exists() && obj.hasAction("Examine"))
+                    .toList();
+
+            if (!objetos.isEmpty()) {
+                // Escolhe um objeto aleatório
+                GameObject aleatorio = objetos.get(Calculations.random(0, objetos.size() - 1));
+
+                logCategory("antiban","Examinando: " + aleatorio.getName());
+                aleatorio.interact("Examine");
+                Sleep.sleep(Calculations.random(1000, 2000));
+            }
+        } else if (chance <= 40) {
+            logCategory("antiban","Girando a câmera.");
+            mouseRotateToYaw(Calculations.random(0, 360));
+            Sleep.sleep(Calculations.random(800, 1500));
+        }
+
+    }
+
+    private void logCategory(String category, String message) {
+        String last = lastLogs.get(category);
+        if (!message.equals(last)) {
+            Logger.log(message);
+            lastLogs.put(category, message);
+        }
+    }
+
+
 
 }
 
