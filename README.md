@@ -1,7 +1,7 @@
 <div align="center">
   <img src="src/images/logo.png" alt="Logo" width="200" height="200">
   <h3><strong>Automação Inteligente com Java para Old School RuneScape.</strong></h3>
-  <p>README EM CONSTRUÇÃO!</p>
+  <p>Projeto em andamento!</p>
 </div>
 
 ## Sobre o Projeto
