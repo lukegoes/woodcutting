@@ -1,16 +1,15 @@
-<!-- PROJECT LOGO -->
-<br />
 <div align="center">
-  <a href="">
-    <img src="src/images/logo.png" alt="Logo" width="80" height="80">
-  </a>
-
-  <h3 align="center">Automação Inteligente com Java para Old School RuneScape.</h3>
-
-  <p align="center">
-    An awesome README template to jumpstart your projects!
-    <br />
-  </p>
+  <table>
+    <tr>
+      <td>
+        <img src="src/images/logo.png" alt="Logo" width="200" height="200">
+      </td>
+      <td style="text-align: left; padding-left: 20px;">
+        <h3><strong>Automação Inteligente com Java para Old School RuneScape.</strong></h3>
+        <p>An awesome README template to jumpstart your projects!</p>
+      </td>
+    </tr>
+  </table>
 </div>
 
 
