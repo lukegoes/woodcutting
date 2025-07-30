@@ -17,23 +17,17 @@
 
 [![Product Name Screen Shot][product-screenshot]](https://example.com)
 
-There are many great README templates available on GitHub; however, I didn't find one that really suited my needs so I created this enhanced one. I want to create a README template so amazing that it'll be the last one you ever need -- I think this is it.
+Este projeto nasceu da combinação entre meu interesse por programação e meu hobby no jogo Old School RuneScape. Desenvolvi esse bot em Java para automatizar o treino de corte de lenha, focando em eficiência e simulação de movimentos aleatórios para parecer um jogador humano.
 
-Here's why:
-* Your time should be focused on creating something amazing. A project that solves a problem and helps others
-* You shouldn't be doing the same tasks over and over like creating a README from scratch
-* You should implement DRY principles to the rest of your life :smile:
+Alguns dos objetivos principais deste projeto são:
 
-Algo que tem me ajudado bastante nesse projeto é escrever textos explicando, com minhas próprias palavras, o que estou fazendo em cada etapa. Isso me permite entender melhor o processo e facilita muito quando preciso retomar o projeto depois de um tempo.
+- Criar um bot que simule o comportamento humano, reduzindo riscos de detecção.
+- Oferecer diferentes modos de treinamento para atender perfis variados de jogadores.
+- Facilitar a configuração através de uma interface gráfica amigável.
 
-This section should list any major frameworks/libraries used to bootstrap your project. Leave any add-ons/plugins for the acknowledgements section. Here are a few examples.
-
-* [![JQuery][JQuery.com]][JQuery-url]
+Além disso, algo que me tem ajudado muito durante o desenvolvimento é escrever, em palavras simples, o que estou fazendo em cada etapa. Isso me permite entender melhor o processo e torna mais fácil retomar o projeto após pausas.
 
 ## Atualizações e Melhorias
-
-This is an example of how you may give instructions on setting up your project locally.
-To get a local copy up and running follow these simple example steps.
 
 - **v1.4** Adicionei mais um método de treinamento, agora você pode treinar até o nível 60 (na v1.35 era até o nível 30). 
 - **v1.31** Otimizei as mensagens de log para evitar repetição no terminal.
@@ -45,50 +39,21 @@ To get a local copy up and running follow these simple example steps.
 <!-- ROADMAP -->
 ## Roadmap
 
-- [x] Add Changelog
-- [x] Add back to top links
-- [ ] Add Additional Templates w/ Examples
-- [ ] Add "components" document to easily copy & paste sections of the readme
-- [ ] Multi-language Support
-    - [ ] Chinese
-    - [ ] Spanish
-
-See the [open issues](https://github.com/othneildrew/Best-README-Template/issues) for a full list of proposed features (and known issues).
+- [x] Modo: Power Training.
+- [x] Adicionar: Willow Trees (lvl 30~45).
+- [ ] Adicionar: Maple Trees (lvl 45~60).
+- [ ] Criar: GUI e Interface customizadas.
+- [ ] Adicionar: Script comprar e utilizar o melhor machado possível sempre que obter o lvl necessário.
+- [ ] Antiban: Trocar de mundo caso haja interação com outro jogador.
+- [ ] Adicionar: Yew Trees (lvl 60~99).
+- [ ] Conquista: Ir do lvl 1 ao 99 utilizando apenas o bot.
 
 ## Contatos
 
-**Lucas Goes**  
 [LinkedIn](https://www.linkedin.com/in/lukgoes) • [GitHub](https://github.com/lukegoes)
 
 ## Conteúdo útil
 
 Use this space to list resources you find helpful and would like to give credit to. I've included a few of my favorites to kick things off!
 
-* [Choose an Open Source License](https://choosealicense.com)
-* [GitHub Emoji Cheat Sheet](https://www.webpagefx.com/tools/emoji-cheat-sheet)
-* [Malven's Flexbox Cheatsheet](https://flexbox.malven.co/)
-* [Malven's Grid Cheatsheet](https://grid.malven.co/)
-* [Img Shields](https://shields.io)
-* [GitHub Pages](https://pages.github.com)
-* [Font Awesome](https://fontawesome.com)
-* [React Icons](https://react-icons.github.io/react-icons/search)
-
-
-
-<!-- MARKDOWN LINKS & IMAGES -->
-<!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-[contributors-shield]: https://img.shields.io/github/contributors/othneildrew/Best-README-Template.svg?style=for-the-badge
-[contributors-url]: https://github.com/othneildrew/Best-README-Template/graphs/contributors
-[forks-shield]: https://img.shields.io/github/forks/othneildrew/Best-README-Template.svg?style=for-the-badge
-[forks-url]: https://github.com/othneildrew/Best-README-Template/network/members
-[stars-shield]: https://img.shields.io/github/stars/othneildrew/Best-README-Template.svg?style=for-the-badge
-[stars-url]: https://github.com/othneildrew/Best-README-Template/stargazers
-[issues-shield]: https://img.shields.io/github/issues/othneildrew/Best-README-Template.svg?style=for-the-badge
-[issues-url]: https://github.com/othneildrew/Best-README-Template/issues
-[license-shield]: https://img.shields.io/github/license/othneildrew/Best-README-Template.svg?style=for-the-badge
-[license-url]: https://github.com/othneildrew/Best-README-Template/blob/master/LICENSE.txt
-[linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
-[linkedin-url]: https://linkedin.com/in/othneildrew
-[product-screenshot]: images/screenshot.png
-[JQuery.com]: https://img.shields.io/badge/jQuery-0769AD?style=for-the-badge&logo=jquery&logoColor=white
-[JQuery-url]: https://jquery.com 
+[DreamBot JavaDocs](https://dreambot.org/javadocs/overview-summary.html)
