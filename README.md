@@ -1,34 +1,16 @@
 <div align="center">
-  <table>
+  <table border="0" cellspacing="0" cellpadding="0" style="border-collapse: collapse;">
     <tr>
-      <td>
+      <td style="border: none;">
         <img src="src/images/logo.png" alt="Logo" width="200" height="200">
       </td>
-      <td style="text-align: left; padding-left: 20px;">
+      <td style="text-align: left; padding-left: 20px; border: none;">
         <h3><strong>Automação Inteligente com Java para Old School RuneScape.</strong></h3>
-        <p>An awesome README template to jumpstart your projects!</p>
+        <p>READ ME EM CONSTRUÇÃO!</p>
       </td>
     </tr>
   </table>
 </div>
-
-
-<details>
-  <summary>Conteúdo</summary>
-  <ol>
-    <li>
-      <a href="#sobre-o-projeto">Sobre o Projeto</a>
-    </li>
-    <li>
-      <a href="#atualizações-e-melhorias">Atualizações e melhorias</a>
-    </li>
-    <li><a href="#roadmap">Roadmap</a></li>
-    <li><a href="#contatos">Contatos</a></li>
-    <li><a href="#conteúdo-útil">Conteúdo útil</a></li>
-  </ol>
-</details>
-
-
 
 <!-- ABOUT THE PROJECT -->
 ## Sobre o Projeto
