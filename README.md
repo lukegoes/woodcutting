@@ -1,21 +1,12 @@
 <div align="center">
-  <table border="0" cellspacing="0" cellpadding="0" style="border-collapse: collapse;">
-    <tr>
-      <td style="border: none;">
-        <img src="src/images/logo.png" alt="Logo" width="200" height="200">
-      </td>
-      <td style="text-align: left; padding-left: 20px; border: none;">
-        <h3><strong>Automação Inteligente com Java para Old School RuneScape.</strong></h3>
-        <p>READ ME EM CONSTRUÇÃO!</p>
-      </td>
-    </tr>
-  </table>
+  <img src="src/images/logo.png" alt="Logo" width="200" height="200">
+  <h3><strong>Automação Inteligente com Java para Old School RuneScape.</strong></h3>
+  <p>README EM CONSTRUÇÃO!</p>
 </div>
 
-<!-- ABOUT THE PROJECT -->
 ## Sobre o Projeto
 
-[![Product Name Screen Shot][product-screenshot]](https://example.com)
+[![Captura de tela](https://i.imgur.com/isLfHj9.png)](https://example.com)
 
 Este projeto nasceu da combinação entre meu interesse por programação e meu hobby no jogo Old School RuneScape. Desenvolvi esse bot em Java para automatizar o treino de corte de lenha, focando em eficiência e simulação de movimentos aleatórios para parecer um jogador humano.
 
@@ -53,7 +44,5 @@ Além disso, algo que me tem ajudado muito durante o desenvolvimento é escrever
 [LinkedIn](https://www.linkedin.com/in/lukgoes) • [GitHub](https://github.com/lukegoes)
 
 ## Conteúdo útil
-
-Use this space to list resources you find helpful and would like to give credit to. I've included a few of my favorites to kick things off!
 
 [DreamBot JavaDocs](https://dreambot.org/javadocs/overview-summary.html)
